@@ -1,0 +1,22 @@
+﻿@model IEnumerable<SchoolRegister.ViewModels.VMs.SubjectVM>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TeacherName)
+        </td>
+        <td>
+            @Html.ActionLink(Localizer["Edit"].Value, "CreateOrUpdateSubject", new { id = item.Id }) |
+            @Html.ActionLink(Localizer["Details"].Value, "Details", new { id = item.Id })
+        </td>
+    </tr>
+}

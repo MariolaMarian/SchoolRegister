@@ -1,0 +1,30 @@
+﻿@model IEnumerable<SchoolRegister.ViewModels.VMs.StudentVM>
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GroupName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AverageGrade)
+        </td>
+        <td>
+            @Html.ActionLink(@Localizer["GradesReport"].Value, "Index", "Grade", new { id = item.Id })
+            @if (User.IsInRole("Teacher"))
+            {
+                @Html.Raw(" | ")
+                @Html.ActionLink(@Localizer["AddGrade"].Value, "Create", "Grade", new { id = item.Id })
+            }
+        </td>
+    </tr>
+}

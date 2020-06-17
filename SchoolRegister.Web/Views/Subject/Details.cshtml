@@ -1,0 +1,37 @@
+﻿@model SchoolRegister.ViewModels.VMs.SubjectVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Details"];
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            <label>@Localizer["Name"]</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            <label>@Localizer["Description"]</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            <label>@Localizer["Teacher"]</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TeacherName)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink(@Localizer["Edit"].Value, "CreateOrUpdate", new { id = Model.Id }) |
+    <a asp-action="Index">@Localizer["BackToList"]</a>
+</div>

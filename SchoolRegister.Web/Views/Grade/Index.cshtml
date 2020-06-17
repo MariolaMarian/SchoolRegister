@@ -1,0 +1,82 @@
+﻿@model SchoolRegister.ViewModels.VMs.GradesReportVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["GradesReport"];
+}
+
+
+@if (Model != null)
+{
+    <div>
+        <h4>@ViewData["Title"]</h4>
+        <hr />
+
+        <dl class="row">
+            <dt class="col-sm-2">
+                <label>@Localizer["FirstName"]</label>
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StudentFirstName)
+            </dd>
+            <dt class="col-sm-2">
+                <label>@Localizer["LastName"]</label>
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StudentLastName)
+            </dd>
+            <dt class="col-sm-2">
+                <label>@Localizer["Parent"]</label>
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ParentName)
+            </dd>
+            <dt class="col-sm-2">
+                <label>@Localizer["Group"]</label>
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.GroupName)
+            </dd>
+            <dt class="col-sm-2">
+                <label>@Localizer["AverageGrade"]</label>
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.AverageGrade)
+            </dd>
+            <dt class="col-sm-12">
+                <label>@Localizer["GradesPerSubject"]</label>
+            </dt>
+            <dd class="col-sm-12">
+                @foreach (var item in Model.StudentGradesPerSubject)
+                {
+                <dt class="col-sm-2">
+                    @Html.DisplayFor(model => item.Key)
+                </dt>
+                <dd class="col-sm-10">
+
+                    @foreach (var grade in item.Value)
+                    {
+                        @grade;
+                        @Html.Raw(" ; ");
+                    }
+                </dd>
+            }
+                </dd>
+                <dt class="col-sm-12">
+                    <label>@Localizer["AverageGradePerSubject"]</label>
+                </dt>
+                <dd class="col-sm-12">
+                    @foreach (var item in Model.AverageGradePerSubject)
+                    {
+                    <dt class="col-sm-2">
+                        @Html.DisplayFor(model => item.Key)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => item.Value)
+                    </dd>
+                }
+                    </dd>
+                </dl>
+            </div>
+        }

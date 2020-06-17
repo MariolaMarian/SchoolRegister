@@ -1,0 +1,42 @@
+﻿@model IEnumerable<SchoolRegister.ViewModels.VMs.GroupVM>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Groups"].Value;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="CreateOrUpdate">@Localizer["CreateNew"]</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <label>@Localizer["Name"]</label>
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.ActionLink(Localizer["Edit"].Value, "CreateOrUpdate", new { id = item.Id }) |
+                    @Html.ActionLink(Localizer["Details"].Value, "Details", new { id = item.Id }) |
+                    @Html.ActionLink(Localizer["AttachStudent"].Value, "AttachStudentToGroup", "StudentGroup", new { id = item.Id }) |
+                    @Html.ActionLink(Localizer["DetachStudent"].Value, "DetachStudentFromGroup", "StudentGroup", new { id = item.Id }) |
+                    @Html.ActionLink(Localizer["AttachSubject"].Value, "AttachSubjectToGroup", "SubjectGroup", new { id = item.Id }) |
+                    @Html.ActionLink(Localizer["DetachSubject"].Value, "DetachSubjectFromGroup", "SubjectGroup", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

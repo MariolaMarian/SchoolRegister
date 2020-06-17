@@ -1,0 +1,34 @@
+﻿@model SchoolRegister.ViewModels.DTOs.GroupForCreateOrUpdateDTO
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = ViewBag.ActionType + " " + Localizer["Group"];
+}
+
+
+<h4>@ViewData["Title"]</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateOrUpdate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Id" type="hidden" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">@Localizer["Name"]</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="@Localizer["Save"]" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">@Localizer["BackToList"]</a>
+</div>
+
