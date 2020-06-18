@@ -141,4 +141,7 @@
   <data name="Students" xml:space="preserve">
     <value>Uczniowie</value>
   </data>
+  <data name="You will ony see students to which group at least one of your subject is attached" xml:space="preserve">
+    <value>Tylko uczniowie, w których grupie prowadzisz przedmiot będą widoczni</value>
+  </data>
 </root>

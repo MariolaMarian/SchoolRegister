@@ -123,6 +123,9 @@
   <data name="AverageGradePerSubject" xml:space="preserve">
     <value>Średnia ocen z przedmiotów</value>
   </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>Powrót do listy</value>
+  </data>
   <data name="FirstName" xml:space="preserve">
     <value>Imię</value>
   </data>

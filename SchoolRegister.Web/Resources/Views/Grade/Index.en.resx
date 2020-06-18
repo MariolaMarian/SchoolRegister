@@ -123,6 +123,9 @@
   <data name="AverageGradePerSubject" xml:space="preserve">
     <value>Average grade per subject</value>
   </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>Back to list</value>
+  </data>
   <data name="FirstName" xml:space="preserve">
     <value>First name</value>
   </data>

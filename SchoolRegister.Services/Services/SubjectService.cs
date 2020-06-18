@@ -31,7 +31,17 @@ namespace SchoolRegister.Services.Services
             {
                 _dbContext.Subjects.Update(subjectEntity);
             }
-            _dbContext.SaveChanges();
+
+            try
+            {
+                if(_dbContext.SaveChanges() <1)
+                    return null;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+
             var subjectVM = _mapper.Map<SubjectVM>(subjectEntity);
             return subjectVM;
         }

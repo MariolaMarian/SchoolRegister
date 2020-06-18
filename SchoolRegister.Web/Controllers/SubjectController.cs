@@ -13,6 +13,7 @@ using SchoolRegister.Services.Interfaces;
 using SchoolRegister.ViewModels.DTOs;
 using SchoolRegister.ViewModels.VMs;
 using SchoolRegister.Web.Extensions;
+using SchoolRegister.Web.Models;
 
 namespace SchoolRegister.Web.Controllers
 {
@@ -82,9 +83,12 @@ namespace SchoolRegister.Web.Controllers
         public IActionResult Details(int id)
         {
             var subjectVM = _subjectService.GetSubject(x => x.Id == id);
+            if (subjectVM == null)
+                return View("Error");
             return View(subjectVM);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateOrUpdateSubject(int? id = null)
         {
             var teachersVM = _teacherService.GetTeachers();
@@ -93,6 +97,10 @@ namespace SchoolRegister.Web.Controllers
             if (id.HasValue)
             {
                 var subjectVM = _subjectService.GetSubject(x => x.Id == id);
+                if(subjectVM == null)
+                {
+                    return View("Error");
+                }
                 ViewBag.ActionType = _localizer["Edit"];
                 return View(_mapper.Map<SubjectForCreateOrUpdateDTO>(subjectVM));
             }
@@ -107,10 +115,11 @@ namespace SchoolRegister.Web.Controllers
         {
             if(ModelState.IsValid)
             {
-                _subjectService.CreateOrUpdate(subjectForCreateOrUpdateDTO);
-                return RedirectToAction("Index");
+                if (_subjectService.CreateOrUpdate(subjectForCreateOrUpdateDTO) != null)
+                    return RedirectToAction("Index");
+                return View("Error",new ErrorViewModel() { Description = _localizer["This subject already exists"] }); //already exists with this name
             }
-            return View();
+            return View("CreateOrUpdateSubject");
         }
     }
 }

@@ -14,8 +14,15 @@
     <div class="col-lg-4">
         <input id="students-filter-input" class="form-control" type="text" placeholder="@Localizer["Filter"]" />
     </div>
+    @if (User.IsInRole("Teacher"))
+    {
+        <div class="col-lg-8">
+            <label class="text-danger">@Localizer["You will ony see students to which group at least one of your subject is attached"]</label>
+        </div>
+    }
 </div>
 }
+
 
 
 <table class="table">

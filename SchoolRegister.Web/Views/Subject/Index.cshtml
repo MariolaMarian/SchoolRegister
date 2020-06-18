@@ -14,9 +14,13 @@
     </div>
 </div>
 
-<p>
-    <a asp-action="CreateOrUpdateSubject">@Localizer["CreateNew"]</a>
-</p>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="CreateOrUpdateSubject">@Localizer["CreateNew"]</a>
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>

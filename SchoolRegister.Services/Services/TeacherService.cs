@@ -23,7 +23,7 @@ namespace SchoolRegister.Services.Services
         }
         public TeacherVM GetTeacher(Expression<Func<Teacher, bool>> filterPredicate)
         {
-            var teacherEntity = _dbContext.Users.OfType<Teacher>().FirstOrDefault();
+            var teacherEntity = _dbContext.Users.OfType<Teacher>().FirstOrDefault(filterPredicate);
             if(teacherEntity == null)
             {
                 throw new InvalidOperationException("Teacher not found");

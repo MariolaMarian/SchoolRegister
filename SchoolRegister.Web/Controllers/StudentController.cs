@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using SchoolRegister.BLL.Entities;
 using SchoolRegister.Services.Interfaces;
 using SchoolRegister.ViewModels.VMs;
+using SchoolRegister.Web.Extensions;
 
 namespace SchoolRegister.Web.Controllers
 {
@@ -22,7 +23,7 @@ namespace SchoolRegister.Web.Controllers
         private readonly ISubjectService _subjectService;
         public StudentController(UserManager<User> userManager, IMapper mapper, IStudentService studentService,
             IGroupService groupService, ISubjectService subjectService,
-            IStringLocalizer<StudentController> stringLocalizer, ILoggerFactory loggerFactory) :base(stringLocalizer, loggerFactory)
+            IStringLocalizer<StudentController> stringLocalizer, ILoggerFactory loggerFactory) : base(stringLocalizer, loggerFactory)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -32,8 +33,8 @@ namespace SchoolRegister.Web.Controllers
         }
         public IActionResult Index(string filterValue = null)
         {
-            Expression<Func<Student,bool>> filterPredicate = null;
-            if(!string.IsNullOrWhiteSpace(filterValue))
+            Expression<Func<Student, bool>> filterPredicate = null;
+            if (!string.IsNullOrWhiteSpace(filterValue))
             {
                 filterPredicate = x => (x.FirstName + " " + x.LastName).Contains(filterValue);
             }
@@ -50,22 +51,32 @@ namespace SchoolRegister.Web.Controllers
             }
             else if (_userManager.IsInRoleAsync(user, "Teacher").Result)
             {
-                //TO DO: only students from teacher -> subject = groups
                 var teacher = user as Teacher;
-                studentsVM = _studentService.GetStudents(filterPredicate);
+
+                Expression<Func<Student, bool>> filterByTeacherPredicate =
+                    s => s.Group.SubjectGroups.Any(sg => teacher.Subjects.Select(sub => sub.Id).Contains(sg.SubjectId));
+
+                var finalFilter = filterPredicate != null ?
+                    Expression.Lambda<Func<Student, bool>>(
+                    Expression.AndAlso(filterPredicate.Body,
+                    new ExpressionParameterReplacer(filterByTeacherPredicate.Parameters, filterPredicate.Parameters)
+                    .Visit(filterByTeacherPredicate.Body)),
+                    filterPredicate.Parameters) : filterByTeacherPredicate;
+
+                studentsVM = _studentService.GetStudents(finalFilter);
             }
             else if (_userManager.IsInRoleAsync(user, "Admin").Result)
             {
                 studentsVM = _studentService.GetStudents(filterPredicate);
             }
 
-            if (studentsVM==null)
+            if (studentsVM == null)
             {
                 return View("Error");
             }
 
             bool isAjax = HttpContext.Request.Headers["x-requested-with"] == "XMLHttpRequest";
-            if(isAjax)
+            if (isAjax)
             {
                 return PartialView("_StudentsTablePartial", studentsVM);
             }

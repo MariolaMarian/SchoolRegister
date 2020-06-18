@@ -123,4 +123,7 @@
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
+  <data name="This subject already exists" xml:space="preserve">
+    <value>This subject already exists!</value>
+  </data>
 </root>

@@ -283,6 +283,12 @@ namespace SchoolRegister.DAL.Migrations
                 column: "SubjectId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Groups_Name",
+                table: "Groups",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Groups_SubjectId",
                 table: "Groups",
                 column: "SubjectId");
@@ -291,6 +297,12 @@ namespace SchoolRegister.DAL.Migrations
                 name: "IX_SubjectGroups_SubjectId",
                 table: "SubjectGroups",
                 column: "SubjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subjects_Name",
+                table: "Subjects",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Subjects_TeacherId",

@@ -160,6 +160,9 @@ namespace SchoolRegister.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.HasIndex("SubjectId");
 
                     b.ToTable("Groups");
@@ -218,6 +221,9 @@ namespace SchoolRegister.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.HasIndex("TeacherId");
 
