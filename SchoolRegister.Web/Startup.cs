@@ -1,28 +1,17 @@
 using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
-using SchoolRegister.BLL.Entities;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using SchoolRegister.DAL.EF;
-using System.Net.Mail;
-using System.Net;
-using SchoolRegister.Services.Interfaces;
-using SchoolRegister.Services.Services;
-using AutoMapper;
-using SchoolRegister.Web.Configuration;
-using System.Globalization;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 using SchoolRegister.Web.Hubs;
+using SchoolRegister.Web.Extensions.Startup;
 
 namespace SchoolRegister.Web
 {
@@ -59,65 +48,41 @@ namespace SchoolRegister.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
+
             services.AddApplicationInsightsTelemetry(Configuration);
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-            services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
-                var supportedCultures = new[]
-                {
-                    new CultureInfo("en"),
-                    new CultureInfo("pl-PL")
-                };
-                options.DefaultRequestCulture = new RequestCulture("en", "en");
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
-            });
+
+            services.ConfigureCookies();
+
+            services.ConfigureLocalization();
+
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
                 options.Cookie.HttpOnly = true;
             });
+
+            var connStr = new ConnectionStringDTO() { ConnectionString = _connectionString };
+            services.AddSingleton(connStr);
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(_connectionString);
             });
-            services.AddIdentity<User, Role>()
-                    .AddRoles<Role>()
-                    .AddRoleManager<RoleManager<Role>>()
-                    .AddEntityFrameworkStores<ApplicationDbContext>()
-                    .AddSignInManager<SignInManager<User>>()
-                    .AddDefaultUI()
-                    .AddDefaultTokenProviders();
-            services.AddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, Role>>();
+
+            services.ConfigureIdentity();
+
+            services.ConfigureServicesContainer();
+
+            services.AddSignalR();
+
             services.AddAntiforgery(options =>
             {
                 options.HeaderName = "X-XSRF-TOKEN";
             });
-            services.Configure<FormOptions>(x =>
-            {
-                x.ValueLengthLimit = int.MaxValue;
-                x.MultipartBodyLengthLimit = int.MaxValue;
-                x.KeyLengthLimit = int.MaxValue;
-            });
 
-            services.AddScoped((serviceProvider) =>
-            {
-                var config = serviceProvider.GetRequiredService<IConfiguration>();
-                return new SmtpClient()
-                {
-                    Host = config.GetValue<string>("Email:Smtp:Host"),
-                    Port = config.GetValue<int>("Email:Smtp:Port"),
-                    Credentials = new NetworkCredential(
-                        config.GetValue<string>("Email:Smtp:Username"),
-                        config.GetValue<string>("Email:Smtp:Password")
-                        )
-                };
-            });
+            services.ConfigureFormOptions();
+
+            services.ConfigureSmtp();
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
@@ -130,22 +95,6 @@ namespace SchoolRegister.Web
                         return factory.Create("Translations", assemblyName.Name);
                     };
                 });
-
-            var connStr = new ConnectionStringDTO() { ConnectionString = _connectionString };
-            services.AddSingleton(connStr);
-            services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-            services.AddScoped<DbContext, ApplicationDbContext>();
-            services.AddScoped<DbContextOptions<ApplicationDbContext>>();
-            services.AddScoped<IGroupService, GroupService>();
-            services.AddScoped<ISubjectGroupService, SubjectGroupService>();
-            services.AddScoped<IStudentGroupService, StudentGroupService>();
-            services.AddScoped<IGradeService, GradeService>();
-            services.AddScoped<ISubjectService, SubjectService>();
-            services.AddScoped<ITeacherService, TeacherService>();
-            services.AddScoped<IStudentService, StudentService>();
-            services.AddScoped<IEmailService, EmailService>();
-
-            services.AddSignalR();
 
             Services = services;
         }
