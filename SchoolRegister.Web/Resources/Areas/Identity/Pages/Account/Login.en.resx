@@ -126,7 +126,7 @@
   <data name="ResendEmailConfirmation" xml:space="preserve">
     <value>Resend email confirmation</value>
   </data>
-  <data name="UserExternalLogin" xml:space="preserve">
+  <data name="UseExternalLogin" xml:space="preserve">
     <value>Use another service to log in</value>
   </data>
 </root>

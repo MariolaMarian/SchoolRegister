@@ -25,12 +25,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a>
                         </li>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Index">@Localizer["Students"]</a>
-                            </li>
-                        }
+
                         @if (User.IsInRole("Admin") || User.IsInRole("Teacher"))
                         {
                             <li class="nav-item">
@@ -43,6 +38,19 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Email" asp-action="Index">@Localizer["Email"]</a>
                             </li>
                         }
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Index">@Localizer["Students"]</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Chat" asp-action="Index">@Localizer["Chat"]</a>
+                            </li>
+                        }
+
+
                     </ul>
                 </div>
 

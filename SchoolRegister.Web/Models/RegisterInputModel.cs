@@ -42,6 +42,7 @@ namespace SchoolRegister.Web.Models
         [StringLength(50)]
         public string TeacherTitles { get; set; }
 
+        [Display(Name ="Group")]
         public int? GroupId { get; set; }
     }
 }

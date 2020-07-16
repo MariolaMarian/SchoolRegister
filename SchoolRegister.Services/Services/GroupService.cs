@@ -52,7 +52,15 @@ namespace SchoolRegister.Services.Services
             {
                 _dbContext.Groups.Update(groupEntity);
             }
-            _dbContext.SaveChanges();
+            try
+            {
+                if (_dbContext.SaveChanges() < 1)
+                    return null;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
             var groupVM = _mapper.Map<GroupVM>(groupEntity);
             return groupVM;
         }

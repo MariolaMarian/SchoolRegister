@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using SchoolRegister.Services.Interfaces;
 using SchoolRegister.ViewModels.DTOs;
 using SchoolRegister.ViewModels.VMs;
+using SchoolRegister.Web.Models;
 
 namespace SchoolRegister.Web.Controllers
 {
@@ -62,7 +63,8 @@ namespace SchoolRegister.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _groupService.CreateOrUpdateGroup(groupForCreateOrUpdateDTO);
+                if (_groupService.CreateOrUpdateGroup(groupForCreateOrUpdateDTO) == null)
+                    return View("Error", new ErrorViewModel() { Description = "This group already exists!" });
                 return RedirectToAction("Index");
             }
             return View();

@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
+using SchoolRegister.Web.Hubs;
 
 namespace SchoolRegister.Web
 {
@@ -143,6 +144,9 @@ namespace SchoolRegister.Web
             services.AddScoped<ITeacherService, TeacherService>();
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IEmailService, EmailService>();
+
+            services.AddSignalR();
+
             Services = services;
         }
 
@@ -177,7 +181,9 @@ namespace SchoolRegister.Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                endpoints.MapHub<ChatHub>("/chathub");
             });
+
         }
     }
 }
